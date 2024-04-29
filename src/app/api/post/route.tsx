@@ -1,6 +1,12 @@
 import postListModel from '@/models/postListModel';
 import { connect2MongoDB } from 'connect2mongodb';
 import { NextResponse, type NextRequest } from 'next/server';
+import OpenAI from 'openai';
+
+// const openai = new OpenAI({
+//     apiKey: process.env.OPEN_AI_API_KEY, // This is the default and can be omitted
+// });
+
 
 export async function GET(request: NextRequest) {
 
@@ -25,6 +31,14 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
 
     const { postTitle, postDescription, postCategory } = await request.json();
+
+    // const response = await openai.images.generate({
+    //     model: "dall-e-3",
+    //     prompt: {postTitle},
+    //     n: 1,
+    //     size: "1024x1024",
+    // });
+    // const image_url = response.data[0].url;
 
     await connect2MongoDB();
 

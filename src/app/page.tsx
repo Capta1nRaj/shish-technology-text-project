@@ -146,7 +146,7 @@ export default function Home() {
               <EditorComponent onpostDescriptionChange={handlepostDescriptionChange} />
             </div>
 
-            <button className="bg-white text-black font-bold rounded-full px-4 py-2 my-4" onClick={addAPostFunction}> SUBMIT </button>
+            <button className="bg-white text-black font-bold rounded-full px-4 py-2 my-4" onClick={() => { addAPostFunction(); getPostList(); }}> SUBMIT </button>
 
           </main>
         </>
