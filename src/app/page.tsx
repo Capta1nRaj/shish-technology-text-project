@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import EditorComponent from "@/components/EditorComponent";
@@ -6,6 +7,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 interface Post {
+  image: string | undefined;
   _id: string;
   title: string;
   category: string;
@@ -37,10 +39,11 @@ export default function Home() {
     setaddPost(!addPost);
     setinitialPage(!initialPage);
     resetStrings();
+    await getPostList();
   }
 
   //! Reset Strings
-  function resetStrings() {
+  async function resetStrings() {
     setpostTitle('');
     setpostCategory('');
     setpostDescription('');
@@ -71,7 +74,7 @@ export default function Home() {
 
     await axios.delete(`/api/post`, config);
 
-    getPostList();
+    await getPostList();
   }
 
   //! Update a post
@@ -80,7 +83,7 @@ export default function Home() {
     resetStrings();
     seteditPost(false);
     setinitialPage(true);
-    getPostList();
+    await getPostList();
   }
 
   //! Fetch post list on initial load 
@@ -99,6 +102,7 @@ export default function Home() {
             <table>
               <thead>
                 <tr className="text-center border">
+                  <th className="border py-4">Image</th>
                   <th className="border py-4">Title</th>
                   <th className="border">Category</th>
                   <th className="border">Edit</th>
@@ -109,13 +113,14 @@ export default function Home() {
                 {postList && postList.map((item: Post) => {
                   return (
                     <tr className="text-center border" key={item._id}>
+                      <td className="flex justify-center p-4"><img className="w-40 h-auto" src={item.image} alt="" /></td>
                       <td className="border w-1/2 my-10 py-10">{item.title}</td>
                       <td className="border w-1/5">{item.category}</td>
                       <td className="border">
                         <button className="bg-white text-black font-bold px-4 py-2 rounded-full" onClick={() => { editAPostFunction(item._id); { setpostId(item._id); } }}>Edit</button>
                       </td>
                       <td className="border">
-                        <button className="bg-white text-black font-bold px-4 py-2 rounded-full" onClick={() => { deleteAPostFunction(item._id); getPostList(); }}>Delete</button>
+                        <button className="bg-white text-black font-bold px-4 py-2 rounded-full" onClick={async () => { deleteAPostFunction(item._id); await getPostList(); }}>Delete</button>
                       </td>
                     </tr>
                   )
@@ -146,7 +151,7 @@ export default function Home() {
               <EditorComponent onpostDescriptionChange={handlepostDescriptionChange} />
             </div>
 
-            <button className="bg-white text-black font-bold rounded-full px-4 py-2 my-4" onClick={() => { addAPostFunction(); getPostList(); }}> SUBMIT </button>
+            <button className="bg-white text-black font-bold rounded-full px-4 py-2 my-4" onClick={async () => { addAPostFunction(); await getPostList(); }}> SUBMIT </button>
 
           </main>
         </>
